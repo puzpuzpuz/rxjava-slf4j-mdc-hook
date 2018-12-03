@@ -11,3 +11,14 @@ cache:
     - $HOME/.gradle/wrapper/
 after_success:
   - ./gradlew jacocoTestReport coveralls
+jobs:
+  include:
+  - stage: all tests
+    script: ./gradlew build
+  - stage: release
+    script: skip
+    deploy:
+      provider: script
+      script: ./gradlew bintrayUpload
+      on:
+        tags: true
