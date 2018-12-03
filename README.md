@@ -1,6 +1,7 @@
 # rxjava-slf4j-mdc-hook
 
 [![Build Status](https://travis-ci.org/puzpuzpuz/rxjava-slf4j-mdc-hook.svg?branch=master)](https://travis-ci.org/puzpuzpuz/rxjava-slf4j-mdc-hook)
+[![Coverage Status](https://coveralls.io/repos/github/puzpuzpuz/rxjava-slf4j-mdc-hook/badge.svg?branch=master)](https://coveralls.io/github/puzpuzpuz/rxjava-slf4j-mdc-hook?branch=master)
 
 [RxJava](https://github.com/ReactiveX/RxJava) v1 and v2 [hooks](https://github.com/ReactiveX/RxJava/pull/4007) which enable [SLF4J](https://github.com/qos-ch/slf4j)'s [`MDC`](http://www.slf4j.org/api/org/apache/log4j/MDC.html) propagation.
 
