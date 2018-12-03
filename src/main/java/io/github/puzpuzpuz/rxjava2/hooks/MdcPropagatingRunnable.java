@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.bmcstdio.rxjava2.hooks;
+package io.github.puzpuzpuz.rxjava2.hooks;
 
 import org.slf4j.MDC;
 
@@ -29,6 +29,7 @@ public final class MdcPropagatingRunnable implements Runnable {
 
     /**
      * Decorates an {@link Runnable} so that it executes with the current {@link MDC} as its context.
+     *
      * @param runnable0 the {@link Runnable} to decorate.
      */
     public MdcPropagatingRunnable(final Runnable runnable0) {

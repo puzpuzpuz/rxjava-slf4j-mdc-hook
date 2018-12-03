@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 brunomcustodio
+ * Copyright 2016-2017 brunomcustodio
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package io.github.bmcstdio.rxjava2.hooks;
+package io.github.puzpuzpuz.rxjava.hooks;
 
 import com.google.common.collect.ImmutableMap;
-import io.reactivex.Observable;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -32,12 +28,15 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.MDC;
+import rx.Observable;
+import rx.observers.TestSubscriber;
+import rx.plugins.RxJavaHooks;
+import rx.schedulers.Schedulers;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Matchers.anyMapOf;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -45,7 +44,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @PrepareForTest(MDC.class)
 @RunWith(PowerMockRunner.class)
-public final class MdcPropagatingOnScheduleFunctionTests {
+public final class MdcPropagatingOnScheduleActionTests {
     private static final String ALT_VAL_1 = "ALT_VAL_1";
     private static final String ALT_VAL_2 = "ALT_VAL_2";
     private static final String KEY_1 = "KEY_1";
@@ -60,12 +59,12 @@ public final class MdcPropagatingOnScheduleFunctionTests {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        RxJavaPlugins.setScheduleHandler(null);
+        RxJavaHooks.setOnScheduleAction(null);
     }
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        RxJavaPlugins.setScheduleHandler(new MdcPropagatingOnScheduleFunction());
+        RxJavaHooks.setOnScheduleAction(new MdcPropagatingOnScheduleAction());
     }
 
     @Before
@@ -77,18 +76,18 @@ public final class MdcPropagatingOnScheduleFunctionTests {
     public void doesNotCallSetContextMapIfMdcIsEmpty() throws Exception {
         MDC.clear();
 
-        final TestObserver<Object> observer = new TestObserver<>();
+        final TestSubscriber<Object> subscriber = new TestSubscriber<Object>();
         Observable.create(subscriber1 -> {
-            subscriber1.onNext(Optional.ofNullable(MDC.get(KEY_1)));
-            subscriber1.onNext(Optional.ofNullable(MDC.get(KEY_2)));
-            subscriber1.onComplete();
-        }).subscribeOn(Schedulers.computation()).subscribe(observer);
+            subscriber1.onNext(MDC.get(KEY_1));
+            subscriber1.onNext(MDC.get(KEY_2));
+            subscriber1.onCompleted();
+        }).subscribeOn(Schedulers.computation()).subscribe(subscriber);
 
-        observer.awaitTerminalEvent();
-        observer.assertValues(Optional.empty(), Optional.empty());
+        subscriber.awaitTerminalEvent();
+        subscriber.assertValues(null, null);
 
         verifyStatic(never());
-        MDC.setContextMap(anyStringMap());
+        MDC.setContextMap(anyMapOf(String.class, String.class));
     }
 
     @Test
@@ -96,18 +95,18 @@ public final class MdcPropagatingOnScheduleFunctionTests {
         MDC.put(KEY_1, VAL_1);
         MDC.put(KEY_2, VAL_2);
 
-        final TestObserver<Object> observer = new TestObserver<>();
+        final TestSubscriber<Object> subscriber = new TestSubscriber<Object>();
         Observable.create(subscriber1 -> {
             subscriber1.onNext(MDC.get(KEY_1));
             subscriber1.onNext(MDC.get(KEY_2));
-            subscriber1.onComplete();
-        }).subscribeOn(Schedulers.computation()).subscribe(observer);
+            subscriber1.onCompleted();
+        }).subscribeOn(Schedulers.computation()).subscribe(subscriber);
 
-        observer.awaitTerminalEvent();
-        observer.assertValues(VAL_1, VAL_2);
+        subscriber.awaitTerminalEvent();
+        subscriber.assertValues(VAL_1, VAL_2);
 
         verifyStatic(times(1));
-        MDC.setContextMap(anyStringMap());
+        MDC.setContextMap(anyMapOf(String.class, String.class));
     }
 
     @Test
@@ -117,15 +116,15 @@ public final class MdcPropagatingOnScheduleFunctionTests {
         MDC.put(KEY_1, VAL_1);
         MDC.put(KEY_2, VAL_2);
 
-        final TestObserver<Object> observer = new TestObserver<>();
+        final TestSubscriber<Object> subscriber = new TestSubscriber<Object>();
         Observable.create(subscriber1 -> {
             subscriber1.onNext(MDC.get(KEY_1));
             subscriber1.onNext(MDC.get(KEY_2));
-            subscriber1.onComplete();
-        }).subscribeOn(Schedulers.computation()).subscribe(observer);
+            subscriber1.onCompleted();
+        }).subscribeOn(Schedulers.computation()).subscribe(subscriber);
 
-        observer.awaitTerminalEvent();
-        observer.assertValues(VAL_1, VAL_2);
+        subscriber.awaitTerminalEvent();
+        subscriber.assertValues(VAL_1, VAL_2);
 
         final ArgumentCaptor<Map<String, String>> captor = ArgumentCaptor.forClass(ALT_MAP.getClass());
 
@@ -141,15 +140,11 @@ public final class MdcPropagatingOnScheduleFunctionTests {
     private static final class DoesRestoreMdcMdcGetCopyOfContextMapAnswer implements Answer {
         @Override
         public Object answer(final InvocationOnMock invocation) throws Throwable {
-            if (Thread.currentThread().getName().startsWith("RxComputationThreadPool")) {
+            if (Thread.currentThread().getName().startsWith("RxComputationScheduler")) {
                 return ALT_MAP;
             } else {
                 return invocation.callRealMethod();
             }
         }
-    }
-
-    private static Map<String, String> anyStringMap() {
-        return any();
     }
 }

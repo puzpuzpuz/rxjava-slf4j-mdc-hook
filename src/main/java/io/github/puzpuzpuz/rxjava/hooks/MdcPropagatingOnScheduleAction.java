@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 brunomcustodio
+ * Copyright 2016-2017 brunomcustodio
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package io.github.bmcstdio.rxjava2.hooks;
+package io.github.puzpuzpuz.rxjava.hooks;
 
-import io.reactivex.functions.Function;
+import rx.functions.Action0;
+import rx.functions.Func1;
 
 /**
- * A hook which can be registered with {@link io.reactivex.plugins.RxJavaPlugins#setScheduleHandler(Function)} in
+ * A hook which can be registered with {@link rx.plugins.RxJavaHooks#setOnScheduleAction(Func1)} in
  * order to enable {@link org.slf4j.MDC} propagation.
  */
-public final class MdcPropagatingOnScheduleFunction implements Function<Runnable, Runnable> {
+public final class MdcPropagatingOnScheduleAction implements Func1<Action0, Action0> {
     @Override
-    public Runnable apply(Runnable runnable) {
-        return new MdcPropagatingRunnable(runnable);
+    public Action0 call(final Action0 action0) {
+        return new MdcPropagatingAction(action0);
     }
 }
