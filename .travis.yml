@@ -11,6 +11,3 @@ cache:
     - $HOME/.gradle/wrapper/
 after_success:
   - ./gradlew jacocoTestReport coveralls
-env:
-  global:
-    - JAVA6_HOME=/usr/lib/jvm/java-6-openjdk-amd64
