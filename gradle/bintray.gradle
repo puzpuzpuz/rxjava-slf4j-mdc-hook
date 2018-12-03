@@ -3,14 +3,14 @@ apply plugin: 'maven-publish'
 bintray {
     key = System.getenv('BINTRAY_APIKEY')
     pkg {
-        desc = 'An RxJava hook which enables SLF4J\'s MDC propagation.'
+        desc = 'RxJava v1 and v2 hooks which enable SLF4J\'s MDC propagation.'
         githubReleaseNotesFile = 'README.md'
-        githubRepo = 'brunomcustodio/rxjava-slf4j-mdc-hook'
-        issueTrackerUrl = 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook/issues'
+        githubRepo = 'puzpuzpuz/rxjava-slf4j-mdc-hook'
+        issueTrackerUrl = 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook/issues'
         licenses = ['Apache-2.0']
         name = 'rxjava-slf4j-mdc-hook'
-        repo = 'maven'
-        vcsUrl = 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook.git'
+        repo = 'io.github.puzpuzpuz'
+        vcsUrl = 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook.git'
         version {
             desc = project.version
             gpg {
@@ -19,7 +19,7 @@ bintray {
             name = project.version
             released = new Date()
         }
-        websiteUrl = 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook'
+        websiteUrl = 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook'
     }
     publications = ['DefaultMavenPublication']
     user = System.getenv('BINTRAY_USER')
@@ -42,12 +42,12 @@ publishing {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
                     name 'rxjava-slf4j-mdc-hook'
-                    description 'An RxJava hook which enables SLF4J\' MDC propagation.'
-                    url 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook'
+                    description 'RxJava v1 and v2 hooks which enable SLF4J\'s MDC propagation.'
+                    url 'https://github.com/rxjava-slf4j-mdc-hook/rxjava-slf4j-mdc-hook'
                     scm {
-                        url 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook.git'
-                        connection 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook.git'
-                        developerConnection 'https://github.com/brunomcustodio/rxjava-slf4j-mdc-hook.git'
+                        url 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook.git'
+                        connection 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook.git'
+                        developerConnection 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook.git'
                     }
                     licenses {
                         license {
@@ -61,6 +61,11 @@ publishing {
                             id 'brunomcustodio'
                             name 'brunomcustodio'
                             email 'brunomcustodio@gmail.com'
+                        }
+                        developer {
+                            id 'puzpuzpuz'
+                            name 'Andrey Pechkurov'
+                            email 'apechkurov@gmail.com'
                         }
                     }
                 }

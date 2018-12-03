@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.bmcstdio.rxjava.hooks;
+package io.github.puzpuzpuz.rxjava.hooks;
 
 import rx.functions.Action0;
 import rx.functions.Func1;
@@ -24,8 +24,8 @@ import rx.functions.Func1;
  * order to enable {@link org.slf4j.MDC} propagation.
  */
 public final class MdcPropagatingOnScheduleAction implements Func1<Action0, Action0> {
-  @Override
-  public Action0 call(final Action0 action0) {
-    return new MdcPropagatingAction(action0);
-  }
+    @Override
+    public Action0 call(final Action0 action0) {
+        return new MdcPropagatingAction(action0);
+    }
 }

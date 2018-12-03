@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.bmcstdio.rxjava.hooks;
+package io.github.puzpuzpuz.rxjava.hooks;
 
 import org.slf4j.MDC;
 import rx.functions.Action0;
@@ -25,31 +25,32 @@ import java.util.Map;
  * Decorates an {@link Action0} so that it executes with the current {@link MDC} as its context.
  */
 public final class MdcPropagatingAction implements Action0 {
-  private final Action0 action0;
-  private final Map<String, String> context;
+    private final Action0 action0;
+    private final Map<String, String> context;
 
-  /**
-   * Decorates an {@link Action0} so that it executes with the current {@link MDC} as its context.
-   * @param action0 the {@link Action0} to decorate.
-   */
-  public MdcPropagatingAction(final Action0 action0) {
-    this.action0 = action0;
-    this.context = MDC.getCopyOfContextMap();
-  }
-
-  @Override
-  public void call() {
-    final Map<String, String> originalMdc = MDC.getCopyOfContextMap();
-
-    if (context != null) {
-      MDC.setContextMap(context);
+    /**
+     * Decorates an {@link Action0} so that it executes with the current {@link MDC} as its context.
+     *
+     * @param action0 the {@link Action0} to decorate.
+     */
+    public MdcPropagatingAction(final Action0 action0) {
+        this.action0 = action0;
+        this.context = MDC.getCopyOfContextMap();
     }
-    try {
-      this.action0.call();
-    } finally {
-      if (originalMdc != null) {
-        MDC.setContextMap(originalMdc);
-      }
+
+    @Override
+    public void call() {
+        final Map<String, String> originalMdc = MDC.getCopyOfContextMap();
+
+        if (context != null) {
+            MDC.setContextMap(context);
+        }
+        try {
+            this.action0.call();
+        } finally {
+            if (originalMdc != null) {
+                MDC.setContextMap(originalMdc);
+            }
+        }
     }
-  }
 }
