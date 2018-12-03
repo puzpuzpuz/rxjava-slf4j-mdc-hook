@@ -1,6 +1,7 @@
 apply plugin: 'maven-publish'
 
 bintray {
+    user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_APIKEY')
     pkg {
         desc = 'RxJava v1 and v2 hooks which enable SLF4J\'s MDC propagation.'
@@ -22,7 +23,6 @@ bintray {
         websiteUrl = 'https://github.com/puzpuzpuz/rxjava-slf4j-mdc-hook'
     }
     publications = ['DefaultMavenPublication']
-    user = System.getenv('BINTRAY_USER')
 }
 
 publishing {
