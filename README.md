@@ -37,7 +37,7 @@ Both `RxJavaPlugins#getInstance()` and `RxJavaSchedulersHook#onSchedule(Action0)
 
 ## Binaries
 
-`rxjava-slf4j-mdc-hook` is available from both JCenter and Maven Central:
+`rxjava-slf4j-mdc-hook` is available from JCenter:
 
 **Gradle:**
 
